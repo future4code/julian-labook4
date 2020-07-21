@@ -86,7 +86,7 @@ userRouter.post(
     try {
       const id = req.body.id;
       if (id) {
-        const token = req.headers.token as string;
+        const token = req.headers.authorization as string;
         const authenticator = new Authenticator();
         const authenticationData = authenticator.verifyToken(token);
         const userDb = new UserDatabase();
@@ -107,3 +107,52 @@ userRouter.post(
     await BaseDatabase.destroyConnection();
   }
 );
+
+userRouter.delete("/remove", async (req: Request, res: Response): Promise<void> => {
+  try{
+    const id = req.body.id
+    if(id){
+      const token = req.headers.authorization as string;
+      const authenticator = new Authenticator()
+      const authenticationData = authenticator.verifyToken(token)
+      const userDb = new UserDatabase()
+      const user = await userDb.getUserById(authenticationData.id)
+
+      const removeFriend = new RelationsDatabase()
+      await removeFriend.removeFriend(user.id, id)
+
+      res.status(200).send({
+        message: "You're no longer friends"
+      })
+    }
+    
+  }
+  catch(err) {
+    res.status(400).send({
+      message: err.message
+    })
+  }
+  await BaseDatabase.destroyConnection()
+})
+
+userRouter.get("/friends", async (req: Request, res: Response): Promise<any> => {
+  try{
+    const token = req.headers.authorization as string
+
+    const authenticator = new Authenticator()
+    const authenticationData = authenticator.verifyToken(token)
+
+    const userDb = new UserDatabase()
+    const friends = await userDb.getFriends(authenticationData.id)
+
+    res.status(200).send({
+      friends
+    })
+  }
+  catch(err){
+    res.status(400).send({
+      message: err.message
+    })
+  }
+  BaseDatabase.destroyConnection()
+})
