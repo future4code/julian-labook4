@@ -1,5 +1,6 @@
 import { BaseDatabase } from "./BaseDatabase";
 import { RelationsDatabase } from "./RelationsDatabase";
+import { User } from "../models/User";
 
 export class UserDatabase extends BaseDatabase {
   public static TABLE_NAME = "LaBook_Users";
@@ -20,13 +21,14 @@ export class UserDatabase extends BaseDatabase {
       .into(UserDatabase.TABLE_NAME);
   }
 
-  public async userInfo(email: string): Promise<any> {
+  public async userInfo(email: string): Promise<User> {
     const result = await this.getConnection()
       .select("*")
       .from(UserDatabase.TABLE_NAME)
       .where({ email });
-
-    return result[0];
+    const data = result[0];
+    const user = new User(data.id, data.name, data.email, data.password);
+    return user;
   }
 
   public async getUserById(id: string): Promise<any> {

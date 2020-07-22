@@ -1,7 +1,8 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import { AddressInfo } from "net";
 import { userRouter } from "./routes/userRouter";
+import { UserDatabase } from "./data/UserDatabase";
 
 dotenv.config();
 
