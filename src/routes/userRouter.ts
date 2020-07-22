@@ -6,79 +6,14 @@ import { UserDatabase } from "../data/UserDatabase";
 import { BaseDatabase } from "../data/BaseDatabase";
 import { UserBusiness } from "../business/UserBusiness";
 import { RelationsDatabase } from "../data/RelationsDatabase";
+import { UserController } from "../controller/UserController";
+import { User } from "../models/User";
 
 export const userRouter = express.Router();
+export const controller = new UserController();
+userRouter.post("/signup", controller.signup);
 
-userRouter.post("/signup", async (req: Request, res: Response) => {
-  try {
-    if (!req.body.password || req.body.password.length < 6) {
-      throw new Error("Your passwords needs at least 6 characters!");
-    }
-
-    const userData = {
-      email: req.body.email,
-      password: req.body.password,
-      name: req.body.name,
-    };
-
-    if (req.body.email.indexOf("@") === -1) {
-      throw new Error("Please, provide a valid email address");
-    }
-
-    const hashManager = new HashManager();
-    const cipherText = await hashManager.hash(userData.password);
-
-    const userBusiness = new UserBusiness();
-    await userBusiness.signup(userData.name, userData.email, cipherText);
-
-    res.status(200).send({
-      message: `User ${userData.name} created successfully`,
-    });
-  } catch (e) {
-    res.status(400).send({
-      message: e.message,
-    });
-  }
-  BaseDatabase.destroyConnection();
-});
-
-userRouter.post("/login", async (req: Request, res: Response) => {
-  try {
-    if (!req.body.email || req.body.email.indexOf("@") === -1) {
-      throw new Error("Invalid email");
-    }
-
-    const userData = {
-      email: req.body.email,
-      password: req.body.password,
-    };
-
-    const userDatabase = new UserDatabase();
-    const user = await userDatabase.userInfo(userData.email);
-
-    const hashManager = new HashManager();
-    const comparePassword = await hashManager.compare(
-      userData.password,
-      user.password
-    );
-
-    if (!comparePassword) {
-      throw new Error("Invalid password");
-    }
-
-    const authenticator = new Authenticator();
-    const token = authenticator.generateToken({
-      id: user.id,
-    });
-
-    res.status(200).send({ token });
-  } catch (err) {
-    res.status(400).send({
-      message: err.message,
-    });
-  }
-  BaseDatabase.destroyConnection();
-});
+userRouter.post("/login", controller.login);
 
 userRouter.post(
     "/add",
@@ -86,7 +21,7 @@ userRouter.post(
     try {
       const id = req.body.id;
       if (id) {
-        const token = req.headers.token as string;
+        const token = req.headers.authorization as string;
         const authenticator = new Authenticator();
         const authenticationData = authenticator.verifyToken(token);
         const userDb = new UserDatabase();
@@ -107,3 +42,52 @@ userRouter.post(
     await BaseDatabase.destroyConnection();
   }
 );
+
+userRouter.delete("/remove", async (req: Request, res: Response): Promise<void> => {
+  try{
+    const id = req.body.id
+    if(id){
+      const token = req.headers.authorization as string;
+      const authenticator = new Authenticator()
+      const authenticationData = authenticator.verifyToken(token)
+      const userDb = new UserDatabase()
+      const user = await userDb.getUserById(authenticationData.id)
+
+      const removeFriend = new RelationsDatabase()
+      await removeFriend.removeFriend(user.id, id)
+
+      res.status(200).send({
+        message: "You're no longer friends"
+      })
+    }
+    
+  }
+  catch(err) {
+    res.status(400).send({
+      message: err.message
+    })
+  }
+  await BaseDatabase.destroyConnection()
+})
+
+userRouter.get("/friends", async (req: Request, res: Response): Promise<any> => {
+  try{
+    const token = req.headers.authorization as string
+
+    const authenticator = new Authenticator()
+    const authenticationData = authenticator.verifyToken(token)
+
+    const userDb = new UserDatabase()
+    const friends = await userDb.getFriends(authenticationData.id)
+
+    res.status(200).send({
+      friends
+    })
+  }
+  catch(err){
+    res.status(400).send({
+      message: err.message
+    })
+  }
+  BaseDatabase.destroyConnection()
+})
