@@ -81,7 +81,7 @@ userRouter.post("/login", async (req: Request, res: Response) => {
 });
 
 userRouter.post(
-  "/add",
+    "/add",
   async (req: Request, res: Response): Promise<void> => {
     try {
       const id = req.body.id;
