@@ -1,4 +1,4 @@
-import {CreatePostDatabase} from "../../data/CreatePostDatabase";
+import {PostDatabase} from "../../data/PostDatabase";
 import {Authenticator} from "../../services/Authenticator";
 import {IdGenerator} from "../../services/IdGenerator";
 import moment from "moment";
@@ -23,7 +23,7 @@ export const create = async (req: Request, res: Response) => {
       type: req.body.type
     }
 
-    const postDb = new CreatePostDatabase()
+    const postDb = new PostDatabase()
     await postDb.createPosts(
       id,
       postData.photo,

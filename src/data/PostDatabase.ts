@@ -1,9 +1,7 @@
 import { BaseDatabase } from "./BaseDatabase";
 
-
-
-export class CreatePostDatabase extends BaseDatabase {
-    CreatePostDatabase(arg0: string, CreatePostDatabase: any) {
+export class PostDatabase extends BaseDatabase {
+    PostDatabase(arg0: string, PostDatabase: any) {
       throw new Error("Method not implemented.");
     }
        
@@ -27,17 +25,18 @@ export class CreatePostDatabase extends BaseDatabase {
         type,
         creator_user_id
       })
-      .into(CreatePostDatabase.TABLE_NAME);
-
-      
+      .into(PostDatabase.TABLE_NAME);
+    
     }
 
-    public async getPostById(id: string): Promise<any> {
+    public async getPosts(): Promise<any> {
       const result = await this.getConnection()
         .select("*")
-        .from(CreatePostDatabase.TABLE_NAME)
-        .where({ id });
+        .from(PostDatabase.TABLE_NAME);
+        
 
-        return result[0];
+        return result;
     }  
-}
+
+    
+  }

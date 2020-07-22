@@ -1,9 +1,15 @@
+export enum UserType {
+  NORMAL = "NORMAL",
+  EVENTO = "EVENTO"
+}
+
 export class User {
   constructor(
     private id: string,
     private name: string,
     private email: string,
-    private password: string
+    private password: string,
+    private type: UserType
   ) {}
 
   getId(): string {
@@ -22,6 +28,10 @@ export class User {
     return this.password;
   }
 
+  getType(): string {
+    return this.type;
+  }
+
   setId(id: string) {
     this.id = id;
   }
@@ -33,4 +43,4 @@ export class User {
   setName(name: string) {
     this.name = name;
   }
-}
+ }
