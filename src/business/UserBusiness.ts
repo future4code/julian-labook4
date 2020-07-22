@@ -5,7 +5,7 @@ import { HashManager } from "../services/HashManager";
 export class UserBusiness {
   async signup(name: string, email: string, password: string) {
     const idGenerator = new IdGenerator();
-    const id: string = idGenerator.generate();
+    const id = idGenerator.generate();
 
     const userDatabase = new UserDatabase();
     await userDatabase.createUser(id, name, email, password);
