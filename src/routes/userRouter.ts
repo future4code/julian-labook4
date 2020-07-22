@@ -16,7 +16,7 @@ userRouter.post("/signup", controller.signup);
 userRouter.post("/login", controller.login);
 
 userRouter.post(
-  "/add",
+    "/add",
   async (req: Request, res: Response): Promise<void> => {
     try {
       const id = req.body.id;
