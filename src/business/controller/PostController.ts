@@ -1,6 +1,9 @@
 import {CreatePostDatabase} from "../../data/CreatePostDatabase";
+import {BaseDatabase} from '../../data/BaseDatabase'
 import {Authenticator} from "../../services/Authenticator";
 import {IdGenerator} from "../../services/IdGenerator";
+import {GetPostByTypeDTO, Post} from '../../models/Post'
+import {PostDatabase} from '../../data/PostDatabase'
 import moment from "moment";
 import express, {Request, Response} from "express";
 
@@ -42,4 +45,25 @@ export const create = async (req: Request, res: Response) => {
       mesage: err.message
     })
   }
+  BaseDatabase.destroyConnection()
 };
+
+export const getPostByType = async (req: Request, res: Response) => {
+  try{
+    const postData: GetPostByTypeDTO = {
+      type: req.query.type as string,
+      orderBy: req.query.orderBy as string || "creation_date",
+      orderType: req.query.orderType as string || "ASC"
+    }
+
+    const posts: Post[] = await new PostDatabase().getPostByType(postData)
+
+    res.status(200).send({
+      posts
+    })
+  }
+  catch(err) {
+    message: err.message
+  }
+  BaseDatabase.destroyConnection()
+}
