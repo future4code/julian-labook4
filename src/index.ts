@@ -14,8 +14,7 @@ app.use(express.json());
 
 app.use("/user", userRouter);
 
-app.use("/post", PostRouter);
-
+app.use("/post", PostRouter)
 
 
 const server = app.listen(process.env.PORT || 3003, () => {

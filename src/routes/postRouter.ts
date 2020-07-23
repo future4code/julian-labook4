@@ -4,10 +4,13 @@ import { Authenticator } from "../services/Authenticator";
 import { PostDatabase } from "../data/PostDatabase";
 import moment from "moment";
 import { BaseDatabase } from "../data/BaseDatabase";
+import { create, getPostByType } from "../business/controller/PostController";
+
 
 export const PostRouter = express.Router();
 
 PostRouter.post("/create", create);
+
 
 PostRouter.get("/feed", async (req: Request, res: Response): Promise<any> => {
   try {
@@ -33,3 +36,6 @@ PostRouter.get("/feed", async (req: Request, res: Response): Promise<any> => {
   }
   await BaseDatabase.destroyConnection()
 })
+
+PostRouter.get("/", getPostByType)
+

@@ -1,35 +1,39 @@
+export enum PostType {
+    NORMAL = "Normal",
+    EVENTO = "Evento"
+}
+
 export class Post {
-  constructor(
-    private id: string,
-    private photo: string,
-    private description: string,
-    private creation_date: string,
-    private type: string,
-    private creator_user_id: string
-    
-  ){}
 
-  getId(): string {
-    return this.id;
-  }
+    constructor(
+        private id: string,
+        private photo: string,
+        private description: string,
+        private creationDate: Date,
+        private type: PostType
+    ) {
+        switch (this.type) {
+            case "Normal":
+                this.type = PostType.NORMAL;
+                break
+            case "Evento":
+                this.type = PostType.EVENTO;
+                break
+            default:
+                this.type = PostType.NORMAL;
+        }
+    }
 
-  getPhoto(): string {
-    return this.photo;
-  }
+    public getId = () => this.id
+    public getPhoto = () => this.photo
+    public getDescription = () => this.description
+    public getCreationDate = () => this.creationDate
+    public getType = () => this.type
+}
 
-  getDescription(): string {
-    return this.description;
-  }
+export interface GetPostByTypeDTO {
+    type: string,
+    orderBy: string,
+    orderType: string
 
-  getCreationDate(): string {
-    return this.creation_date;
-  }
-
-  getType(): string {
-    return this.type;
-  }
-
-  getCreatorUserId(): string {
-    return this.creator_user_id;
-  }
 }
