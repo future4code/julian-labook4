@@ -35,4 +35,5 @@ export interface GetPostByTypeDTO {
     type: string,
     orderBy: string,
     orderType: string
+
 }

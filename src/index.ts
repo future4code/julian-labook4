@@ -16,6 +16,7 @@ app.use("/user", userRouter);
 
 app.use("/post", PostRouter)
 
+
 const server = app.listen(process.env.PORT || 3003, () => {
   if (server) {
     const address = server.address() as AddressInfo;

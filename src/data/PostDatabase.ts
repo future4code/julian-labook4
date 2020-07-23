@@ -1,4 +1,67 @@
 import { BaseDatabase } from "./BaseDatabase";
+import { GetPostByTypeDTO } from "../models/Post";
+<<<<<<< HEAD
+
+<<<<<<<< HEAD:src/data/PostDatabase.ts
+export class PostDatabase extends BaseDatabase {
+    getPostByType(postData: GetPostByTypeDTO): import("../models/Post").Post[] | PromiseLike<import("../models/Post").Post[]> {
+      throw new Error("Method not implemented.");
+    }
+    getPosts: any;
+    createPosts(id: string, photo: any, description: any, today: string, type: any, id: string) {
+      throw new Error("Method not implemented.");
+    }
+    PostDatabase(arg0: string, PostDatabase: any) {
+========
+
+export class CreatePostDatabase extends BaseDatabase {
+    CreatePostDatabase(arg0: string, CreatePostDatabase: any) {
+>>>>>>>> master:src/data/CreatePostDatabase.ts
+      throw new Error("Method not implemented.");
+    }
+       
+    private static TABLE_NAME = "Posts";
+
+    public async createPosts(
+      id: string,
+      photo: string,
+      description: string,
+      creation_date: string,
+      type: string,
+      creator_user_id: string
+          
+    ): Promise<void> {
+      await this.getConnection()
+      .insert({
+        id,
+        photo,
+        description,
+        creation_date,
+        type,
+        creator_user_id
+      })
+<<<<<<<< HEAD:src/data/PostDatabase.ts
+      .into(PostDatabase.TABLE_NAME);
+    
+    }
+
+    public async getPosts(): Promise<any> {
+      const result = await this.getConnection()
+        .select("*")
+        .from(PostDatabase.TABLE_NAME);
+        
+
+        return result;
+    }  
+
+    
+  }
+========
+      .into(CreatePostDatabase.TABLE_NAME);
+    } 
+}
+>>>>>>>> master:src/data/CreatePostDatabase.ts
+=======
 import {Post, GetPostByTypeDTO} from '../models/Post'
 
 export class PostDatabase extends BaseDatabase {
@@ -23,3 +86,4 @@ export class PostDatabase extends BaseDatabase {
         return posts
     }
 }
+>>>>>>> master
