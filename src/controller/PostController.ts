@@ -1,8 +1,8 @@
-import {BaseDatabase} from '../../data/BaseDatabase'
-import {Authenticator} from "../../services/Authenticator";
-import {IdGenerator} from "../../services/IdGenerator";
-import {GetPostByTypeDTO, Post} from '../../models/Post'
-import {PostDatabase} from '../../data/PostDatabase'
+import {BaseDatabase} from '../data/BaseDatabase'
+import {Authenticator} from "../services/Authenticator";
+import {IdGenerator} from "../services/IdGenerator";
+import {GetPostByTypeDTO, Post} from '../models/Post'
+import {PostDatabase} from '../data/PostDatabase'
 import moment from "moment";
 import express, {Request, Response} from "express";
 

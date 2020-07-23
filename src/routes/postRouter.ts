@@ -1,10 +1,9 @@
 import express, { Request, Response } from "express";
-import { create } from "../business/controller/PostController";
 import { Authenticator } from "../services/Authenticator";
 import { PostDatabase } from "../data/PostDatabase";
 import moment from "moment";
 import { BaseDatabase } from "../data/BaseDatabase";
-import { create, getPostByType } from "../business/controller/PostController";
+import { create, getPostByType } from "../controller/PostController";
 
 export const PostRouter = express.Router();
 
