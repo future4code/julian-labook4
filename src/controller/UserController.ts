@@ -30,8 +30,13 @@ export class UserController {
       const userBusiness = new UserBusiness();
       await userBusiness.signup(userData.name, userData.email, cipherText);
 
+      const baseDatabase = new UserDatabase();
+      const user: User = await baseDatabase.userInfo(req.body.email);
+      const authenticator = new Authenticator();
+      const token = await authenticator.generateToken({ id: user.getId() });
       res.status(200).send({
         message: `User ${userData.name} created successfully`,
+        token: token,
       });
     } catch (e) {
       res.status(400).send({
@@ -103,3 +108,50 @@ export class UserController {
     }
     await BaseDatabase.destroyConnection();
   }
+
+  public async removeFriend(req: Request, res: Response): Promise<void> {
+    try {
+      const id = req.body.id;
+      if (id) {
+        const token = req.headers.authorization as string;
+        const authenticator = new Authenticator();
+        const authenticationData = authenticator.verifyToken(token);
+        const userDb = new UserDatabase();
+        const user = await userDb.getUserById(authenticationData.id);
+
+        const removeFriend = new RelationsDatabase();
+        await removeFriend.removeFriend(user.id, id);
+
+        res.status(200).send({
+          message: "You're no longer friends",
+        });
+      }
+    } catch (err) {
+      res.status(400).send({
+        message: err.message,
+      });
+    }
+    await BaseDatabase.destroyConnection();
+  }
+
+  public async getFriends(req: Request, res: Response): Promise<any> {
+    try {
+      const token = req.headers.authorization as string;
+
+      const authenticator = new Authenticator();
+      const authenticationData = authenticator.verifyToken(token);
+
+      const userDb = new UserDatabase();
+      const friends = await userDb.getFriends(authenticationData.id);
+
+      res.status(200).send({
+        friends,
+      });
+    } catch (err) {
+      res.status(400).send({
+        message: err.message,
+      });
+    }
+    BaseDatabase.destroyConnection();
+  }
+}
